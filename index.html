@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no,
+               viewport-fit=cover">
+
+    <title>Serpent Attack - Prototipo Alfa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div id="rotate-screen" class="hidden">
+    <p>Por favor gira tu teléfono para jugar en modo horizontal.</p>
+</div>
+
+    <!-- Pantalla 1: Menú Principal -->
+    <div id="menu-screen">
+        <h1>Serpent Attack</h1>
+        <h3 id="high-score-display">Tu Récord: Nivel 0</h3>
+        <p id="challenge-description">  Completa el laberinto y atrapa ratones para ganar tiempo extra.</p>
+
+        <div class="menu-buttons">
+            <button id="start-button" class="menu-btn" disabled>Cargando...</button>
+            <button id="help-button" class="menu-btn" disabled>Ayuda</button>
+            <button id="settings-button" class="menu-btn" disabled>Configuración</button>
+            <button id="exit-button" class="menu-btn" disabled>Salir</button>
+        </div>
+    </div>
+
+    <!-- Pantalla 2: Ayuda -->
+    <div id="help-screen" class="hidden">
+        <h2>Cómo Jugar</h2>
+        <ul>
+            <li>Mueve la serpiente con las flechas del teclado o el D-Pad móvil.</li>
+            <li>Atrapa ratones blancos para ganar puntos y tiempo.</li>
+            <li>Perderás si chocas contra un muro o si se acaba el tiempo.</li>
+        </ul>
+        <button id="back-button" class="menu-btn">Volver al Menú</button>
+    </div>
+
+    <!-- Pantalla 3: Juego -->
+    <div id="game-screen" class="hidden">
+        <div id="info-bar">
+            <h2 id="score-display">Puntos: 0</h2>
+            <h2 id="level-display">Nivel: 1</h2>
+            <h3 id="timer-display">Tiempo: 20</h3>
+        </div>
+
+        <div class="canvas-wrapper">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Pantalla 4: Salida -->
+    <div id="exit-screen" class="hidden">
+        <h2>¡Gracias por jugar!</h2>
+    </div>
+
+    <!-- Modales -->
+    <div id="modal-overlay" class="hidden"></div>
+
+    <div id="game-over-modal" class="modal hidden">
+        <h2>¡Juego Terminado!</h2>
+        <p id="end-game-message"></p>
+        <p id="end-game-stats"></p>
+        <p id="new-record-message" class="hidden">¡NUEVO RÉCORD!</p>
+        <button id="restart-button" class="menu-btn">Volver al Menú</button>
+    </div>
+
+    <div id="level-up-modal" class="modal hidden">
+        <h2 id="level-up-title"></h2>
+        <p id="level-up-bonus"></p>
+        <p id="level-up-next"></p>
+        <button id="next-level-button" class="menu-btn">Continuar</button>
+    </div>
+
+    <div id="settings-modal" class="modal hidden" role="dialog">
+        <h2 id="settings-title">Configuración</h2>
+
+        <div id="settings-controls">
+            <div class="settings-row">
+                <button id="settings-mute-btn" class="small-btn">Silenciar</button>
+                <label>Volumen maestro</label>
+                <input id="settings-master-volume" type="range" min="0" max="100" value="100">
+            </div>
+
+            <div class="settings-row">
+                <label>Volumen música</label>
+                <input id="settings-music-volume" type="range" min="0" max="100" value="30">
+            </div>
+
+            <div class="settings-row">
+                <label>Volumen efectos (SFX)</label>
+                <input id="settings-sfx-volume" type="range" min="0" max="100" value="100">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button id="settings-save-btn" class="menu-btn">Guardar</button>
+            <button id="settings-close-btn" class="menu-btn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- === D-PAD PROFESIONAL ROJO/NEGRO === -->
+    <div id="dpad-pro">
+        <button class="btn up" data-dir="up"></button>
+        <button class="btn left" data-dir="left"></button>
+        <button class="btn right" data-dir="right"></button>
+        <button class="btn down" data-dir="down"></button>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
 
