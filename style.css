@@ -317,16 +317,15 @@ body {
     background: #222;
 }
 
-/* --- D-PAD PROFESIONAL (CONTROLADO POR JS) --- */
+/* --- D-PAD PROFESIONAL --- */
 #dpad-pro {
     position: fixed;
-    bottom: 15px;
-    left: 15px;
-    width: 110px;
-    height: 110px;
+    bottom: max(15px, env(safe-area-inset-bottom, 15px));
+    left: max(15px, env(safe-area-inset-left, 15px));
+    width: 120px;
+    height: 120px;
     z-index: 9999;
-    display: none; /* JS controla la visibilidad */
-    transition: none; /* Sin transiciones para evitar bugs */
+    display: none;
 }
 
 .btn {
@@ -410,9 +409,8 @@ body {
 
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
-    /* JS controla el D-Pad dinámicamente */
-    body {
-        overflow: hidden;
+    #dpad-pro {
+        display: block !important;
     }
 }
 
@@ -446,6 +444,13 @@ body {
     #info-bar {
         padding: 2px 8px;
     }
+    
+    #dpad-pro {
+        width: 90px;
+        height: 90px;
+        bottom: 10px;
+        left: 10px;
+    }
 }
 
 /* --- PORTRAIT MODE EN MOVIL --- */
@@ -454,6 +459,11 @@ body {
         flex-wrap: wrap;
         justify-content: center;
         gap: 5px 15px;
+    }
+    
+    #dpad-pro {
+        width: 120px;
+        height: 120px;
     }
 }
 
@@ -471,10 +481,19 @@ body {
     #info-bar h3 {
         font-size: 0.8rem;
     }
+    
+    #dpad-pro {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 /* --- DESKTOP --- */
 @media (min-width: 769px) {
+    #dpad-pro {
+        display: none !important;
+    }
+    
     .menu-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.3);
