@@ -44,7 +44,7 @@ body {
     max-width: 90vw;
 }
 
-/* --- MENÚ PRINCIPAL --- */
+/* --- MENU PRINCIPAL --- */
 #menu-screen h1 {
     font-size: clamp(2rem, 8vw, 3rem);
     margin-bottom: 10px;
@@ -144,7 +144,8 @@ body {
 
 .modal {
     position: fixed;
-    top: 50%; left: 50%;
+    top: 50%; 
+    left: 50%;
     transform: translate(-50%, -50%);
     background: #2a2a2a;
     padding: 20px;
@@ -157,7 +158,10 @@ body {
     text-align: center;
 }
 
-.modal h2 { color: #FFD700; margin-bottom: 10px; }
+.modal h2 { 
+    color: #FFD700; 
+    margin-bottom: 10px; 
+}
 
 /* --- D-PAD PROFESIONAL --- */
 #dpad-pro {
@@ -167,7 +171,7 @@ body {
     width: 120px;
     height: 120px;
     z-index: 9999;
-    display: none; /* SOLO EN MÓVIL */
+    display: none; /* SOLO EN MOVIL */
 }
 
 .btn {
@@ -190,7 +194,7 @@ body {
     box-shadow: 0 0 12px #ff0000;
 }
 
-/* Ubicación */
+/* Ubicacion */
 .up { top: 0; left: 40px; }
 .down { bottom: 0; left: 40px; }
 .left { left: 0; top: 40px; }
@@ -199,29 +203,33 @@ body {
 /* Flechas */
 .btn::before {
     content: "";
-    width: 0; height: 0;
+    width: 0; 
+    height: 0;
     border-style: solid;
 }
 
-.up::before { border-width: 0 10px 14px; border-color: transparent transparent white transparent; }
-.down::before { border-width: 14px 10px 0; border-color: white transparent transparent transparent; }
-.left::before { border-width: 10px 14px 10px 0; border-color: transparent white transparent transparent; }
-.right::before { border-width: 10px 0 10px 14px; border-color: transparent transparent transparent white; }
+.up::before { 
+    border-width: 0 10px 14px; 
+    border-color: transparent transparent white transparent; 
+}
 
-/* --- RESPONSIVE MÓVIL --- */
+.down::before { 
+    border-width: 14px 10px 0; 
+    border-color: white transparent transparent transparent; 
+}
+
+.left::before { 
+    border-width: 10px 14px 10px 0; 
+    border-color: transparent white transparent transparent; 
+}
+
+.right::before { 
+    border-width: 10px 0 10px 14px; 
+    border-color: transparent transparent transparent white; 
+}
+
+/* --- RESPONSIVE MOVIL --- */
 @media (max-width: 768px) {
-
-    #gameCanvas {
-        width: 90vw !important;
-        height: auto !important;
-    }
-
-    #info-bar {
-        width: 90vw;
-        flex-direction: row;
-        margin-bottom: 10px;
-    }
-
     #dpad-pro {
         display: block !important;
         transform: scale(1.1);
@@ -235,7 +243,7 @@ body {
     #dpad-pro { display: none !important; }
 }
 
-/* Animación */
+/* Animacion */
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.05); opacity: 0.8; }
