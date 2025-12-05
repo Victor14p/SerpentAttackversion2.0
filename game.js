@@ -1,91 +1,138 @@
 // --- Serpent Attack: game.js (actualizado) ---
 // ============================================
-// SISTEMA RESPONSIVE PROFESIONAL - SERPENT ATTACK
+// SISTEMA RESPONSIVE UNIVERSAL - SERPENT ATTACK
+// Funciona en TODOS los dispositivos
 // ============================================
 
 function setupResponsiveCanvas() {
     const canvas = document.getElementById('gameCanvas');
     const infoBar = document.getElementById('info-bar');
     const gameScreen = document.getElementById('game-screen');
+    const dpad = document.getElementById('dpad-pro');
     
     if (!canvas || !gameScreen) return;
     
-    // Dimensiones internas del canvas (NO CAMBIAR - mantiene lógica del juego)
+    // Dimensiones internas del canvas (lógica del juego)
     const INTERNAL_WIDTH = 400;
     const INTERNAL_HEIGHT = 400;
     
+    function getViewportDimensions() {
+        // Método más confiable para obtener dimensiones reales
+        return {
+            width: Math.max(
+                document.documentElement.clientWidth,
+                window.innerWidth || 0
+            ),
+            height: Math.max(
+                document.documentElement.clientHeight,
+                window.innerHeight || 0
+            )
+        };
+    }
+    
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
     function updateScale() {
-        // Detectar dispositivo y orientación
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const isPortrait = window.innerHeight > window.innerWidth;
+        const viewport = getViewportDimensions();
+        const isMobile = isMobileDevice();
+        const isLandscape = viewport.width > viewport.height;
         
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
+        console.log('=== RESIZE DEBUG ===');
+        console.log('Viewport:', viewport.width, 'x', viewport.height);
+        console.log('Mobile:', isMobile, '| Landscape:', isLandscape);
         
-        let availableWidth, availableHeight;
+        let canvasSize;
         
         if (isMobile) {
-            if (isPortrait) {
-                // MODO VERTICAL (PORTRAIT)
-                // Reservar: HUD (60px) + D-Pad (140px) + márgenes (20px)
-                availableWidth = windowWidth * 0.95;
-                availableHeight = windowHeight - 220;
+            if (isLandscape) {
+                // HORIZONTAL: Priorizar altura, dejar espacio a la izquierda para D-Pad
+                const maxHeight = viewport.height * 0.85; // 85% de la altura
+                const maxWidth = (viewport.width - 150) * 0.9; // Espacio para D-Pad
+                canvasSize = Math.min(maxHeight, maxWidth, INTERNAL_WIDTH * 1.5);
             } else {
-                // MODO HORIZONTAL (LANDSCAPE)
-                // Reservar: HUD (50px) + márgenes (20px)
-                availableWidth = windowWidth * 0.80;
-                availableHeight = windowHeight - 70;
+                // VERTICAL: Priorizar ancho, dejar espacio abajo para D-Pad
+                const maxWidth = viewport.width * 0.92;
+                const maxHeight = (viewport.height - 180) * 0.9; // Espacio para HUD + D-Pad
+                canvasSize = Math.min(maxHeight, maxWidth, INTERNAL_WIDTH * 1.5);
             }
         } else {
-            // DESKTOP
-            availableWidth = Math.min(windowWidth * 0.9, 600);
-            availableHeight = windowHeight - 120;
+            // DESKTOP: Tamaño moderado
+            const maxSize = Math.min(viewport.width, viewport.height) * 0.7;
+            canvasSize = Math.min(maxSize, INTERNAL_WIDTH * 1.5);
         }
         
-        // Calcular escala manteniendo proporción 1:1
-        const scale = Math.min(
-            availableWidth / INTERNAL_WIDTH,
-            availableHeight / INTERNAL_HEIGHT,
-            2.0 // máximo 2x en desktop
-        );
+        // Asegurar tamaño mínimo y que sea múltiplo de 20 (tileSize)
+        canvasSize = Math.max(280, Math.floor(canvasSize / 20) * 20);
         
-        // Aplicar tamaño al canvas (visual solamente)
-        const finalWidth = Math.floor(INTERNAL_WIDTH * scale);
-        const finalHeight = Math.floor(INTERNAL_HEIGHT * scale);
+        // Aplicar al canvas
+        canvas.style.width = canvasSize + 'px';
+        canvas.style.height = canvasSize + 'px';
         
-        canvas.style.width = `${finalWidth}px`;
-        canvas.style.height = `${finalHeight}px`;
-        
-        // Ajustar info-bar al ancho del canvas
+        // Ajustar info-bar
         if (infoBar) {
-            infoBar.style.width = `${finalWidth}px`;
+            infoBar.style.width = canvasSize + 'px';
         }
         
-        // Log para debugging
-        console.log(`📱 ${isMobile ? 'Mobile' : 'Desktop'} | ${isPortrait ? 'Portrait' : 'Landscape'}`);
-        console.log(`📐 Canvas: ${finalWidth}x${finalHeight}px (escala: ${Math.round(scale * 100)}%)`);
+        // Mostrar/ocultar D-Pad según contexto
+        if (dpad) {
+            if (isMobile && !gameScreen.classList.contains('hidden')) {
+                dpad.style.display = 'block';
+                
+                // Ajustar posición del D-Pad según orientación
+                if (isLandscape) {
+                    // En horizontal: esquina inferior izquierda
+                    dpad.style.bottom = '15px';
+                    dpad.style.left = '15px';
+                    dpad.style.right = 'auto';
+                    dpad.style.transform = 'none';
+                } else {
+                    // En vertical: centrado abajo
+                    dpad.style.bottom = '20px';
+                    dpad.style.left = '50%';
+                    dpad.style.right = 'auto';
+                    dpad.style.transform = 'translateX(-50%)';
+                }
+            } else {
+                dpad.style.display = 'none';
+            }
+        }
+        
+        const scale = (canvasSize / INTERNAL_WIDTH * 100).toFixed(0);
+        console.log('Canvas:', canvasSize, 'x', canvasSize, `(${scale}%)`);
+        console.log('D-Pad visible:', dpad ? dpad.style.display : 'N/A');
+        console.log('===================');
     }
     
     // Ejecutar inmediatamente
     updateScale();
     
-    // Escuchar cambios de tamaño y orientación
+    // Listeners múltiples para máxima compatibilidad
     window.addEventListener('resize', updateScale);
     window.addEventListener('orientationchange', () => {
-        setTimeout(updateScale, 100); // delay para completar rotación
+        // Esperar a que complete la rotación
+        setTimeout(updateScale, 200);
     });
     
-    // Retornar para uso manual si es necesario
+    // Para iOS
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', updateScale);
+    }
+    
+    // Actualizar cuando cambie de pantalla
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                setTimeout(updateScale, 50);
+            }
+        });
+    });
+    
+    observer.observe(gameScreen, { attributes: true });
+    
     return updateScale;
 }
-
-// Inicializar cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupResponsiveCanvas);
-} else {
-    setupResponsiveCanvas();
-}
-
 // ============================================
 // EXPORTAR PARA USO GLOBAL
 // ============================================
@@ -1088,6 +1135,7 @@ document.addEventListener("DOMContentLoaded", actualizarDpad);
 document.addEventListener("click", actualizarDpad);
 document.addEventListener("touchstart", actualizarDpad);
 window.addEventListener("orientationchange", actualizarDpad);
+
 
 
 
