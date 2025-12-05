@@ -159,8 +159,6 @@ body {
     image-rendering: crisp-edges;
     touch-action: none;
     user-select: none;
-    max-width: 95vw;
-    max-height: calc(100vh - 120px);
     width: auto !important;
     height: auto !important;
 }
@@ -418,10 +416,6 @@ body {
     #dpad-pro {
         display: block !important;
     }
-    
-    #gameCanvas {
-        max-height: calc(100vh - 100px);
-    }
 }
 
 /* --- LANDSCAPE MODE --- */
@@ -471,26 +465,52 @@ body {
 
 /* --- PORTRAIT MODE EN MOVIL --- */
 @media (max-width: 768px) and (orientation: portrait) {
+    body {
+        padding: 0;
+    }
+    
     #game-screen {
-        justify-content: center;
-        padding-top: 5px;
+        justify-content: flex-start;
+        padding: 8px 5px;
+        gap: 5px;
+        height: 100vh;
     }
     
     #info-bar {
         flex-wrap: wrap;
         justify-content: center;
         gap: 5px 15px;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+    
+    #info-bar h2,
+    #info-bar h3 {
+        font-size: clamp(0.75rem, 2.5vw, 1rem);
+    }
+    
+    .canvas-wrapper {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 130px;
     }
     
     #gameCanvas {
-        max-width: 90vw;
-        max-height: calc(100vh - 160px);
+        max-width: 95vw !important;
+        max-height: calc(100vh - 180px) !important;
+        width: 95vw !important;
+        height: auto !important;
     }
     
     #dpad-pro {
-        width: 110px;
-        height: 110px;
+        width: 120px;
+        height: 120px;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 
