@@ -137,16 +137,13 @@ body {
     color: #FFD700;
 }
 
-/* --- CANVAS --- */
+/* --- CANVAS (TAMAÑO CONTROLADO POR JS) --- */
 .canvas-wrapper {
     width: 100%;
-    max-width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
     touch-action: none;
-    flex: 1;
-    overflow: hidden;
 }
 
 #gameCanvas {
@@ -159,8 +156,7 @@ body {
     image-rendering: crisp-edges;
     touch-action: none;
     user-select: none;
-    width: auto !important;
-    height: auto !important;
+    /* NO establecer width/height aquí - lo maneja JavaScript */
 }
 
 /* --- PANTALLA DE AYUDA --- */
@@ -324,10 +320,10 @@ body {
 /* --- D-PAD PROFESIONAL --- */
 #dpad-pro {
     position: fixed;
-    bottom: max(20px, env(safe-area-inset-bottom, 20px));
+    bottom: max(15px, env(safe-area-inset-bottom, 15px));
     left: max(15px, env(safe-area-inset-left, 15px));
-    width: clamp(100px, 18vw, 130px);
-    height: clamp(100px, 18vw, 130px);
+    width: 120px;
+    height: 120px;
     z-index: 9999;
     display: none;
 }
@@ -447,70 +443,27 @@ body {
     
     #info-bar {
         padding: 2px 8px;
-        margin-bottom: 2px;
-    }
-    
-    #gameCanvas {
-        max-height: calc(100vh - 50px);
-        max-width: 85vw;
     }
     
     #dpad-pro {
-        width: 85px;
-        height: 85px;
-        bottom: 8px;
-        left: 8px;
+        width: 90px;
+        height: 90px;
+        bottom: 10px;
+        left: 10px;
     }
 }
 
 /* --- PORTRAIT MODE EN MOVIL --- */
 @media (max-width: 768px) and (orientation: portrait) {
-    body {
-        padding: 0;
-    }
-    
-    #game-screen {
-        justify-content: flex-start;
-        padding: 8px 5px;
-        gap: 5px;
-        height: 100vh;
-    }
-    
     #info-bar {
         flex-wrap: wrap;
         justify-content: center;
         gap: 5px 15px;
-        margin-bottom: 5px;
-        padding: 5px;
-    }
-    
-    #info-bar h2,
-    #info-bar h3 {
-        font-size: clamp(0.75rem, 2.5vw, 1rem);
-    }
-    
-    .canvas-wrapper {
-        flex: 1;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 130px;
-    }
-    
-    #gameCanvas {
-        max-width: 95vw !important;
-        max-height: calc(100vh - 180px) !important;
-        width: 95vw !important;
-        height: auto !important;
     }
     
     #dpad-pro {
         width: 120px;
         height: 120px;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
     }
 }
 
@@ -524,13 +477,14 @@ body {
         max-width: 90vw;
     }
     
-    #info-bar {
+    #info-bar h2,
+    #info-bar h3 {
         font-size: 0.8rem;
     }
     
     #dpad-pro {
-        width: 95px;
-        height: 95px;
+        width: 100px;
+        height: 100px;
     }
 }
 
@@ -563,7 +517,7 @@ button:focus-visible {
     outline-offset: 2px;
 }
 
-/* --- ROTACION DE PANTALLA (OPCIONAL) --- */
+/* --- ROTACION DE PANTALLA --- */
 #rotate-screen {
     position: fixed;
     inset: 0;
