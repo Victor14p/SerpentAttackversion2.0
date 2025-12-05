@@ -1,5 +1,8 @@
 // --- Serpent Attack: game.js (actualizado) ---
-// 1. FUNCIÓN DE ESCALADO RESPONSIVE
+// ============================================
+// SISTEMA RESPONSIVE PROFESIONAL - SERPENT ATTACK
+// ============================================
+
 function setupResponsiveCanvas() {
     const canvas = document.getElementById('gameCanvas');
     const infoBar = document.getElementById('info-bar');
@@ -7,49 +10,86 @@ function setupResponsiveCanvas() {
     
     if (!canvas || !gameScreen) return;
     
-    // Dimensiones internas fijas (NO TOCAR - mantiene lógica del juego)
+    // Dimensiones internas del canvas (NO CAMBIAR - mantiene lógica del juego)
     const INTERNAL_WIDTH = 400;
     const INTERNAL_HEIGHT = 400;
     
     function updateScale() {
-        // Obtener espacio disponible
+        // Detectar dispositivo y orientación
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isPortrait = window.innerHeight > window.innerWidth;
+        
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         
-        // Reservar espacio para UI (info-bar, márgenes, etc)
-        const UI_HEIGHT = 100; // espacio para info-bar y márgenes
-        const MARGIN = 40; // margen de seguridad
+        let availableWidth, availableHeight;
         
-        const availableWidth = windowWidth - MARGIN;
-        const availableHeight = windowHeight - UI_HEIGHT;
-        
-        // Calcular factor de escala (el menor para que quepa todo)
-        const scaleX = availableWidth / INTERNAL_WIDTH;
-        const scaleY = availableHeight / INTERNAL_HEIGHT;
-        const scale = Math.min(scaleX, scaleY, 1.5); // máximo 1.5x
-        
-        // Aplicar escala SOLO al canvas (la lógica interna no se toca)
-        canvas.style.width = `${INTERNAL_WIDTH * scale}px`;
-        canvas.style.height = `${INTERNAL_HEIGHT * scale}px`;
-        
-        // Ajustar info-bar para que coincida con el ancho del canvas
-        if (infoBar) {
-            infoBar.style.width = `${INTERNAL_WIDTH * scale}px`;
+        if (isMobile) {
+            if (isPortrait) {
+                // MODO VERTICAL (PORTRAIT)
+                // Reservar: HUD (60px) + D-Pad (140px) + márgenes (20px)
+                availableWidth = windowWidth * 0.95;
+                availableHeight = windowHeight - 220;
+            } else {
+                // MODO HORIZONTAL (LANDSCAPE)
+                // Reservar: HUD (50px) + márgenes (20px)
+                availableWidth = windowWidth * 0.80;
+                availableHeight = windowHeight - 70;
+            }
+        } else {
+            // DESKTOP
+            availableWidth = Math.min(windowWidth * 0.9, 600);
+            availableHeight = windowHeight - 120;
         }
         
-        // Log para debugging (opcional - puedes comentar)
-        console.log(`Escala aplicada: ${(scale * 100).toFixed(0)}%`);
+        // Calcular escala manteniendo proporción 1:1
+        const scale = Math.min(
+            availableWidth / INTERNAL_WIDTH,
+            availableHeight / INTERNAL_HEIGHT,
+            2.0 // máximo 2x en desktop
+        );
+        
+        // Aplicar tamaño al canvas (visual solamente)
+        const finalWidth = Math.floor(INTERNAL_WIDTH * scale);
+        const finalHeight = Math.floor(INTERNAL_HEIGHT * scale);
+        
+        canvas.style.width = `${finalWidth}px`;
+        canvas.style.height = `${finalHeight}px`;
+        
+        // Ajustar info-bar al ancho del canvas
+        if (infoBar) {
+            infoBar.style.width = `${finalWidth}px`;
+        }
+        
+        // Log para debugging
+        console.log(`📱 ${isMobile ? 'Mobile' : 'Desktop'} | ${isPortrait ? 'Portrait' : 'Landscape'}`);
+        console.log(`📐 Canvas: ${finalWidth}x${finalHeight}px (escala: ${Math.round(scale * 100)}%)`);
     }
     
-    // Ejecutar al cargar y al redimensionar
+    // Ejecutar inmediatamente
     updateScale();
-    window.addEventListener('resize', updateScale);
-    window.addEventListener('orientationchange', updateScale);
     
-    // Retornar función para uso manual si es necesario
+    // Escuchar cambios de tamaño y orientación
+    window.addEventListener('resize', updateScale);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(updateScale, 100); // delay para completar rotación
+    });
+    
+    // Retornar para uso manual si es necesario
     return updateScale;
 }
 
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupResponsiveCanvas);
+} else {
+    setupResponsiveCanvas();
+}
+
+// ============================================
+// EXPORTAR PARA USO GLOBAL
+// ============================================
+window.resizeCanvas = setupResponsiveCanvas;
 // 2. INICIALIZAR AL CARGAR EL DOM
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupResponsiveCanvas);
