@@ -144,6 +144,7 @@ body {
     justify-content: center;
     align-items: center;
     touch-action: none;
+    max-width: min(520px, 96vw);
 }
 
 #gameCanvas {
@@ -395,6 +396,31 @@ body {
     border-color: #ff5555;
     box-shadow: 0 0 15px #ff0000;
     background: rgba(17, 17, 17, 1);
+}
+
+@media (max-width: 600px) {
+    #dpad-pro {
+        width: 92px;
+        height: 92px;
+        bottom: 12px;
+        left: 12px;
+    }
+
+    .btn {
+        border-width: 1.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-screen {
+        padding: 4px;
+        gap: 6px;
+    }
+
+    #info-bar {
+        max-width: 100%;
+        gap: 6px;
+    }
 }
 
 /* --- UTILIDADES --- */

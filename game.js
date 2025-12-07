@@ -38,58 +38,51 @@ function setupResponsiveCanvas() {
         const viewport = getViewportDimensions();
         const isMobile = isMobileDevice();
         const isLandscape = viewport.width > viewport.height;
-        
-        console.log('=== RESIZE DEBUG ===');
-        console.log('Viewport:', viewport.width, 'x', viewport.height);
-        console.log('Mobile:', isMobile, '| Landscape:', isLandscape);
-        
-        let canvasSize;
-        
-        if (isMobile) {
-            if (isLandscape) {
-                // HORIZONTAL: Priorizar altura, dejar espacio a la izquierda para D-Pad
-                const maxHeight = viewport.height * 0.85; // 85% de la altura
-                const maxWidth = (viewport.width - 150) * 0.9; // Espacio para D-Pad
-                canvasSize = Math.min(maxHeight, maxWidth, INTERNAL_WIDTH * 1.5);
-            } else {
-                // VERTICAL: Priorizar ancho, dejar espacio abajo para D-Pad
-                const maxWidth = viewport.width * 0.92;
-                const maxHeight = (viewport.height - 180) * 0.9; // Espacio para HUD + D-Pad
-                canvasSize = Math.min(maxHeight, maxWidth, INTERNAL_WIDTH * 1.5);
-            }
-        } else {
-            // DESKTOP: Tamaño moderado
-            const maxSize = Math.min(viewport.width, viewport.height) * 0.7;
-            canvasSize = Math.min(maxSize, INTERNAL_WIDTH * 1.5);
-        }
-        
+
+        const bodyStyles = getComputedStyle(document.body);
+        const safePaddingX = (parseFloat(bodyStyles.paddingLeft) || 0) + (parseFloat(bodyStyles.paddingRight) || 0);
+        const safePaddingY = (parseFloat(bodyStyles.paddingTop) || 0) + (parseFloat(bodyStyles.paddingBottom) || 0);
+        const infoBarHeight = infoBar ? infoBar.offsetHeight : 0;
+        const dpadReserve = isMobile ? (isLandscape ? 120 : 160) : 0;
+        const hudReserve = infoBarHeight + safePaddingY;
+
+        let maxWidth = viewport.width - safePaddingX - (isMobile && isLandscape ? dpadReserve : 0) - 12;
+        let maxHeight = viewport.height - hudReserve - dpadReserve - 12;
+
+        // Evitar números negativos en pantallas extremadamente pequeñas
+        maxWidth = Math.max(maxWidth, 180);
+        maxHeight = Math.max(maxHeight, 180);
+
+        let canvasSize = Math.min(maxWidth, maxHeight, INTERNAL_WIDTH * 1.4);
+
         // Asegurar tamaño mínimo y que sea múltiplo de 20 (tileSize)
-        canvasSize = Math.max(280, Math.floor(canvasSize / 20) * 20);
-        
+        canvasSize = Math.max(240, Math.floor(canvasSize / 20) * 20);
+
         // Aplicar al canvas
         canvas.style.width = canvasSize + 'px';
         canvas.style.height = canvasSize + 'px';
-        
-        // Ajustar info-bar
+
+        // Ajustar info-bar para que coincida visualmente con el canvas
         if (infoBar) {
             infoBar.style.width = canvasSize + 'px';
+            infoBar.style.maxWidth = '100%';
         }
-        
+
         // Mostrar/ocultar D-Pad según contexto
         if (dpad) {
             if (isMobile && !gameScreen.classList.contains('hidden')) {
                 dpad.style.display = 'block';
-                
+
                 // Ajustar posición del D-Pad según orientación
                 if (isLandscape) {
                     // En horizontal: esquina inferior izquierda
-                    dpad.style.bottom = '15px';
-                    dpad.style.left = '15px';
+                    dpad.style.bottom = 'calc(env(safe-area-inset-bottom) + 12px)';
+                    dpad.style.left = '12px';
                     dpad.style.right = 'auto';
                     dpad.style.transform = 'none';
                 } else {
                     // En vertical: centrado abajo
-                    dpad.style.bottom = '20px';
+                    dpad.style.bottom = 'calc(env(safe-area-inset-bottom) + 16px)';
                     dpad.style.left = '50%';
                     dpad.style.right = 'auto';
                     dpad.style.transform = 'translateX(-50%)';
@@ -98,11 +91,6 @@ function setupResponsiveCanvas() {
                 dpad.style.display = 'none';
             }
         }
-        
-        const scale = (canvasSize / INTERNAL_WIDTH * 100).toFixed(0);
-        console.log('Canvas:', canvasSize, 'x', canvasSize, `(${scale}%)`);
-        console.log('D-Pad visible:', dpad ? dpad.style.display : 'N/A');
-        console.log('===================');
     }
     
     // Ejecutar inmediatamente
