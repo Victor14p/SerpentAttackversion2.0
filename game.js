@@ -1,8 +1,5 @@
-// --- Serpent Attack: game.js (actualizado) ---
-// ============================================
-// SISTEMA RESPONSIVE UNIVERSAL - SERPENT ATTACK
-// Funciona en TODOS los dispositivos
-// ============================================
+//  Serpent Attack: game.js 
+
 
 function setupResponsiveCanvas() {
     const canvas = document.getElementById('gameCanvas');
@@ -133,9 +130,8 @@ function setupResponsiveCanvas() {
     
     return updateScale;
 }
-// ============================================
-// EXPORTAR PARA USO GLOBAL
-// ============================================
+
+
 window.resizeCanvas = setupResponsiveCanvas;
 // 2. INICIALIZAR AL CARGAR EL DOM
 if (document.readyState === 'loading') {
@@ -144,9 +140,7 @@ if (document.readyState === 'loading') {
     setupResponsiveCanvas();
 }
 
-// ============================================
-// MEJORAS ADICIONALES OPCIONALES
-// ============================================
+
 
 // 3. SOPORTE TÁCTIL PARA MÓVILES (OPCIONAL)
 function setupTouchControls() {
@@ -251,7 +245,7 @@ if (document.readyState === 'loading') {
 
 // ============================================
 // NOTAS DE USO:
-// ============================================
+
 // 1. Agregar este código AL INICIO de tu game.js
 // 2. NO modificar canvas.width ni canvas.height (mantener 400x400)
 // 3. El escalado es puramente visual via CSS
@@ -558,9 +552,9 @@ let mouse = { x: 18, y: 18 };
 let currentLevel = 1;
 let scoreToWin = 5;
 let highScore = 0;
-const startingTime = 20;
-const timeAddedPerMouse = 8;
-const bonusTimePerLevel = 20;
+const startingTime = 60;
+const timeAddedPerMouse = 35;
+const bonusTimePerLevel = 60;
 let timerInterval;
 let timeLeft = 0;
 let currentEffect = null;
@@ -1135,6 +1129,7 @@ document.addEventListener("DOMContentLoaded", actualizarDpad);
 document.addEventListener("click", actualizarDpad);
 document.addEventListener("touchstart", actualizarDpad);
 window.addEventListener("orientationchange", actualizarDpad);
+
 
 
 
